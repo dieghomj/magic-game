@@ -1,0 +1,38 @@
+[gd_scene format=3 uid="uid://1t41a5yq3s1v"]
+
+[ext_resource type="PackedScene" uid="uid://bh4p8xo71vb51" path="res://Scenes/Player.tscn" id="1_sat1r"]
+[ext_resource type="PackedScene" uid="uid://dw80nhwul1fdd" path="res://Scenes/SpellTest.tscn" id="2_b3l3m"]
+[ext_resource type="Texture2D" uid="uid://dj7pfqi42le85" path="res://Textures/fire.jpg" id="2_y72vu"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_sat1r"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_b3l3m"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_4pecq"]
+albedo_texture = ExtResource("2_y72vu")
+metallic = 1.0
+metallic_specular = 1.0
+roughness = 0.2
+
+[node name="Node3D" type="Node3D" unique_id=125803251]
+
+[node name="CharacterBody3D" parent="." unique_id=1192913525 instance=ExtResource("1_sat1r")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.194, 1.108, -3.007)
+
+[node name="Camera3D" type="Camera3D" parent="CharacterBody3D" unique_id=575725739]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -1.6176033, 2.3342319, -3.9007201)
+
+[node name="StaticBody3D" type="StaticBody3D" parent="." unique_id=1332829669]
+transform = Transform3D(100, 0, 0, 0, 1, 0, 0, 0, 100, 0, 0, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D" unique_id=2055322719]
+shape = SubResource("BoxShape3D_sat1r")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="StaticBody3D" unique_id=1098183192]
+mesh = SubResource("BoxMesh_b3l3m")
+surface_material_override/0 = SubResource("StandardMaterial3D_4pecq")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=1725379625]
+transform = Transform3D(0.99906284, 0.024669418, -0.035565943, 0.032548834, 0.11345964, 0.9930093, 0.028532261, -0.9932363, 0.11255035, 0, 9.844765, 8.887286)
+
+[node name="SpellCanvas" parent="." unique_id=1197744887 instance=ExtResource("2_b3l3m")]
