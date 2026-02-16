@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://dw80nhwul1fdd"]
 
-[ext_resource type="Script" uid="uid://c1dyt5ujedyhd" path="res://Scripts/SpellController.gd" id="1_ynu1k"]
+[ext_resource type="Script" uid="uid://c1dyt5ujedyhd" path="res://Scripts/spell_controller.gd" id="1_ynu1k"]
 [ext_resource type="Texture2D" uid="uid://b5jjcfyb1cqbm" path="res://Textures/divine.png" id="2_qnw8k"]
 [ext_resource type="Material" uid="uid://c86jilt77l5x3" path="res://Resources/SpellParticleMat.tres" id="3_qnw8k"]
 [ext_resource type="Texture2D" uid="uid://dj7pfqi42le85" path="res://Textures/fire.jpg" id="4_7naq7"]
@@ -37,3 +37,7 @@ begin_cap_mode = 2
 end_cap_mode = 2
 antialiased = true
 metadata/_edit_lock_ = true
+
+[node name="debugLine" type="Line2D" parent="." unique_id=76832721]
+width = 15.0
+default_color = Color(0.52156866, 0.46666667, 1, 0.9098039)

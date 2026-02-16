@@ -1,8 +1,10 @@
 [gd_scene format=3 uid="uid://1t41a5yq3s1v"]
 
 [ext_resource type="PackedScene" uid="uid://bh4p8xo71vb51" path="res://Scenes/Player.tscn" id="1_sat1r"]
+[ext_resource type="Script" uid="uid://cgai41wk387b" path="res://game_controller.gd" id="1_u3d4x"]
 [ext_resource type="PackedScene" uid="uid://dw80nhwul1fdd" path="res://Scenes/SpellTest.tscn" id="2_b3l3m"]
 [ext_resource type="Texture2D" uid="uid://dj7pfqi42le85" path="res://Textures/fire.jpg" id="2_y72vu"]
+[ext_resource type="Script" uid="uid://b0rfwegjytfwi" path="res://Scripts/enemy_spawn.gd" id="4_4pecq"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_sat1r"]
 
@@ -15,9 +17,10 @@ metallic_specular = 1.0
 roughness = 0.2
 
 [node name="Node3D" type="Node3D" unique_id=125803251]
+script = ExtResource("1_u3d4x")
 
 [node name="CharacterBody3D" parent="." unique_id=1192913525 instance=ExtResource("1_sat1r")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.194, 1.108, -3.007)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.6291065, 0)
 
 [node name="Camera3D" type="Camera3D" parent="CharacterBody3D" unique_id=575725739]
 transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -1.6176033, 2.3342319, -3.9007201)
@@ -36,3 +39,17 @@ surface_material_override/0 = SubResource("StandardMaterial3D_4pecq")
 transform = Transform3D(0.99906284, 0.024669418, -0.035565943, 0.032548834, 0.11345964, 0.9930093, 0.028532261, -0.9932363, 0.11255035, 0, 9.844765, 8.887286)
 
 [node name="SpellCanvas" parent="." unique_id=1197744887 instance=ExtResource("2_b3l3m")]
+
+[node name="EnemySpawn" type="Node3D" parent="." unique_id=1586933111]
+script = ExtResource("4_4pecq")
+
+[node name="debugCentroid" type="ColorRect" parent="." unique_id=1476631556]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = -1141.0
+offset_bottom = -632.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
