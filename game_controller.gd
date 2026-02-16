@@ -18,6 +18,7 @@ func _process(delta: float) -> void:
 	
 func process_spell() -> void:
 	recog.set_user_points(spell_control.spell_line.points);
+	print("NEW DRAWING");
 	for p in recog.points:
 		print(p);
 		spell_control.debug_line.add_point(p);

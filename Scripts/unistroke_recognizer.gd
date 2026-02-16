@@ -38,7 +38,7 @@ func resample(sample:int, point_list: Array[Vector2]) -> Array[Vector2]:
 		var prev_point := point_list[i-1];
 		var d := prev_point.distance_to(cur_point);
 		if (acum_dist + d) >= interval :
-			var t = (interval - acum_dist / d);
+			var t = (interval - acum_dist) / d;
 			var new_point = prev_point.lerp(cur_point,t);
 			ret_points.append(new_point);
 			point_list.insert(i, new_point);
@@ -95,7 +95,6 @@ func translate_to(point_list: Array[Vector2], target: Vector2)->void:
 	var ave = Vector2.ZERO
 	for p in point_list: ave += p
 	var current_centroid = ave / point_list.size()
-	centroid = current_centroid;
 	
 	for i in range(point_list.size()):
 		point_list[i] = point_list[i] - current_centroid + target

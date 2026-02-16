@@ -39,5 +39,6 @@ antialiased = true
 metadata/_edit_lock_ = true
 
 [node name="debugLine" type="Line2D" parent="." unique_id=76832721]
+position = Vector2(500, 500)
 width = 15.0
 default_color = Color(0.52156866, 0.46666667, 1, 0.9098039)
