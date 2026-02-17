@@ -1,0 +1,23 @@
+[gd_scene format=3 uid="uid://dw80nhwul1fdd"]
+
+[ext_resource type="Script" uid="uid://c1dyt5ujedyhd" path="res://SpellController.gd" id="1_ynu1k"]
+[ext_resource type="Texture2D" uid="uid://b5jjcfyb1cqbm" path="res://divine.png" id="2_qnw8k"]
+[ext_resource type="Material" uid="uid://c86jilt77l5x3" path="res://SpellParticleMat.tres" id="3_qnw8k"]
+
+[node name="ColorRect" type="ColorRect" unique_id=1197744887]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.4117647, 0.69803923, 1, 0.30980393)
+script = ExtResource("1_ynu1k")
+
+[node name="SpellParticles" type="GPUParticles2D" parent="." unique_id=812489700]
+amount = 320
+texture = ExtResource("2_qnw8k")
+fixed_fps = 60
+process_material = ExtResource("3_qnw8k")
+
+[node name="SpellLine" type="Line2D" parent="." unique_id=668235832]
+joint_mode = 2

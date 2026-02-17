@@ -1,0 +1,83 @@
+[gd_scene format=3 uid="uid://7hhwsndfcfed"]
+
+[ext_resource type="Script" uid="uid://dmbad5khtxxw5" path="res://template_manager.gd" id="1_0f4gu"]
+[ext_resource type="PackedScene" uid="uid://dw80nhwul1fdd" path="res://Scenes/SpellTest.tscn" id="1_g17sb"]
+
+[node name="Control" type="Control" unique_id=1860956869]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_0f4gu")
+
+[node name="SaveButton" type="Button" parent="." unique_id=1407997381]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -129.0
+offset_top = -31.0
+grow_horizontal = 0
+grow_vertical = 0
+text = "Save Templates"
+
+[node name="Button" type="Button" parent="." unique_id=1109778065]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -205.0
+offset_top = 55.0
+offset_right = -1.0
+offset_bottom = 108.0
+grow_horizontal = 0
+size_flags_horizontal = 0
+size_flags_vertical = 8
+text = "Add template"
+
+[node name="TextEdit" type="LineEdit" parent="." unique_id=2081531231]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -205.0
+offset_bottom = 44.0
+grow_horizontal = 0
+size_flags_horizontal = 0
+size_flags_vertical = 0
+placeholder_text = "Template Name"
+
+[node name="SpellCanvas" parent="." unique_id=1197744887 instance=ExtResource("1_g17sb")]
+layout_mode = 0
+anchors_preset = 0
+anchor_right = 0.0
+anchor_bottom = 0.0
+grow_horizontal = 1
+grow_vertical = 1
+
+[node name="ScrollContainer" type="ScrollContainer" parent="." unique_id=1950193776]
+layout_mode = 1
+offset_right = 185.0
+offset_bottom = 651.0
+horizontal_scroll_mode = 0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="ScrollContainer" unique_id=1081674254]
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 4.0
+
+[connection signal="mouse_entered" from="SaveButton" to="." method="_on_gui_mouse_entered"]
+[connection signal="mouse_exited" from="SaveButton" to="." method="_on_gui_mouse_exited"]
+[connection signal="pressed" from="SaveButton" to="." method="_on_save_button_pressed"]
+[connection signal="mouse_entered" from="Button" to="." method="_on_gui_mouse_entered"]
+[connection signal="mouse_exited" from="Button" to="." method="_on_gui_mouse_exited"]
+[connection signal="pressed" from="Button" to="." method="_on_button_pressed"]
+[connection signal="mouse_entered" from="TextEdit" to="." method="_on_gui_mouse_entered"]
+[connection signal="mouse_exited" from="TextEdit" to="." method="_on_gui_mouse_exited"]
+
+[editable path="SpellCanvas"]

@@ -1,0 +1,45 @@
+[gd_scene format=3 uid="uid://dw80nhwul1fdd"]
+
+[ext_resource type="Script" uid="uid://c1dyt5ujedyhd" path="res://Scripts/spell_controller.gd" id="1_ynu1k"]
+[ext_resource type="Texture2D" uid="uid://b5jjcfyb1cqbm" path="res://Textures/divine.png" id="2_qnw8k"]
+[ext_resource type="Material" uid="uid://c86jilt77l5x3" path="res://Resources/SpellParticleMat.tres" id="3_qnw8k"]
+[ext_resource type="Texture2D" uid="uid://dj7pfqi42le85" path="res://Textures/fire.jpg" id="4_7naq7"]
+
+[sub_resource type="Gradient" id="Gradient_7naq7"]
+offsets = PackedFloat32Array(0.0009823183, 0.5805501, 1)
+colors = PackedColorArray(0, 0.76862746, 0, 1, 0, 0, 0, 0.627451, 1, 0.19215687, 0.16470589, 1)
+
+[node name="SpellCanvas" type="ColorRect" unique_id=1197744887]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+color = Color(0.4117647, 0.69803923, 1, 0.30980393)
+script = ExtResource("1_ynu1k")
+metadata/_edit_use_anchors_ = true
+
+[node name="SpellParticles" type="GPUParticles2D" parent="." unique_id=812489700]
+amount = 320
+texture = ExtResource("2_qnw8k")
+fixed_fps = 60
+process_material = ExtResource("3_qnw8k")
+
+[node name="SpellLine" type="Line2D" parent="." unique_id=668235832]
+width = 15.0
+default_color = Color(0.22352941, 0.8235294, 0.15686275, 0.92941177)
+gradient = SubResource("Gradient_7naq7")
+texture = ExtResource("4_7naq7")
+texture_mode = 2
+begin_cap_mode = 2
+end_cap_mode = 2
+antialiased = true
+metadata/_edit_lock_ = true
+
+[node name="debugLine" type="Line2D" parent="." unique_id=76832721]
+position = Vector2(500, 250)
+points = PackedVector2Array(157, 102)
+width = 3.0
+default_color = Color(0.52156866, 0.46666667, 1, 0.9098039)

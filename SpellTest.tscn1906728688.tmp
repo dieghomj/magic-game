@@ -1,0 +1,37 @@
+[gd_scene format=3 uid="uid://dw80nhwul1fdd"]
+
+[ext_resource type="Script" uid="uid://c1dyt5ujedyhd" path="res://SpellController.gd" id="1_ynu1k"]
+[ext_resource type="Texture2D" uid="uid://b12y64dnfh1r8" path="res://icon.svg" id="2_plfu3"]
+
+[sub_resource type="Curve" id="Curve_plfu3"]
+_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(0.5121951, 0.38012743), 0.16963613, 0.16963613, 0, 0, Vector2(1, 0.54568344), -0.82327884, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="CurveTexture" id="CurveTexture_qnw8k"]
+curve = SubResource("Curve_plfu3")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_qnw8k"]
+particle_flag_disable_z = true
+emission_shape = 1
+emission_sphere_radius = 1.0
+direction = Vector3(0, 0, 0)
+gravity = Vector3(0, 0, 0)
+scale_min = 0.0
+scale_over_velocity_max = 2.0
+scale_over_velocity_curve = SubResource("CurveTexture_qnw8k")
+turbulence_enabled = true
+turbulence_noise_strength = 1.95
+
+[node name="ColorRect" type="ColorRect" unique_id=1197744887]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.4117647, 0.69803923, 1, 0.30980393)
+script = ExtResource("1_ynu1k")
+
+[node name="GPUParticles2D" type="GPUParticles2D" parent="." unique_id=812489700]
+amount = 32
+texture = ExtResource("2_plfu3")
+process_material = SubResource("ParticleProcessMaterial_qnw8k")
