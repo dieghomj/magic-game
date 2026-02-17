@@ -30,10 +30,8 @@ func _process(delta: float) -> void:
 		recog.process_points(spell_control.spell_line.points);
 		
 
-
-
 func _on_button_pressed() -> void:
-	recog.add_template(text_edit.text,recog.points);
+	recog.add_template(text_edit.text,recog.processed_points);
 	var button := Button.new();
 	button.name = "template";
 	button.text = text_edit.text;
@@ -51,7 +49,6 @@ func _on_save_button_pressed() -> void:
 	
 func _on_template_pressed(button: Button) -> void:
 	spell_control.debug_line.points = recog.templates[button.text];
-	
 	return;
 
 

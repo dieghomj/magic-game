@@ -2,21 +2,10 @@ class_name UnistrokeRecognizer
 extends Node
 
 const SAMPLE_SIZE := 64;
-const BOUND_BOX_SIZE := 500;
+const BOUND_BOX_SIZE := 250;
 
-var points: Array[Vector2];
 var templates: Dictionary[String, Array];
-var centroid: Vector2;
-
-func process_points(user_points: Array[Vector2]) -> Array[float]:
-	if user_points.size() <= 0: 
-		return [];
-		
-	user_points = resample(SAMPLE_SIZE, user_points);
-	translate_to(user_points, Vector2(0,0))
-	rotate_to_zero(user_points);
-	points = user_points;
-	return vectorize(user_points);
+var processed_points : Array[Vector2];
 
 func add_template(key: String, points: Array[Vector2]) -> void:
 	templates.set(key, points);
@@ -29,13 +18,13 @@ func save_template(filename: String) -> bool:
 		
 		for template in templates:
 			var arr = [];
-			for point in templates[template]:
-				arr.append([point.x,point.y]);
+			for i in range(templates[template].size()):
+				arr.append([templates[template][i].x,templates[template][i].y]);
 			templateJSONFormat.set(template,arr);
 		
 		var json_str = JSON.stringify(templateJSONFormat, "\t");
 		file.store_string(json_str);
-		file.close;
+		file.close();
 		return true;
 	
 	print("Error opening file ", filename ," for writing");
@@ -77,140 +66,106 @@ func load_templates(filename: String)->void:
 	print("Templates loaded");
 	return;
 
-func path_length(point_list: Array[Vector2]) -> float:
-	var distance = 0;
-	for i in range(point_list.size() - 1):
-		distance += point_list[i].distance_to(point_list[i+1]);
-	return distance;
-#Resamples the points to the given sample size 
-func resample(sample:int, point_list: Array[Vector2]) -> Array[Vector2]:
-	var interval = path_length(point_list)/(sample-1);
-	var distance = 0;
-	var new_points : Array[Vector2] = [];
-	new_points.append(point_list[0]);
-	
-	for i in range(1,point_list.size()):
-		var d = point_list[i-1].distance_to(point_list[i]);
-		if (distance + d) >= interval :
-			var t = (interval - distance)/d;
-			var px = point_list[i-1].x + t * (point_list[i].x - point_list[i-1].x);
-			var py = point_list[i-1].y + t * (point_list[i].y - point_list[i-1].y);
-			var newp = Vector2(px,py);
-			new_points.append(newp);
-			point_list.insert(i, newp);
-			distance = 0;
-		else:
-			distance +- d;
-			
-	if new_points.size() < sample:
-		new_points.append(point_list.back());
-	return new_points;
-	
-#Calculates the center of the points and rotates each point so that first point is at 0 degrees from the center 
-func rotate_to_zero(point_list: Array[Vector2]) -> void:
-	centroid = calculate_centroid(point_list)
-	var start := point_list[0];
-	var vec :=  start - centroid ;
-	var angle = vec.angle();
+func get_vectorized_template(key: String) -> Array[float]:
+	var vector : Array[float] = [];
+	for p in templates[key]:
+		vector.append(p.x);
+		vector.append(p.y);
+	return vector;
 
-	for i in range(point_list.size()):
-		point_list[i] = (point_list[i] - centroid).rotated(-angle) + centroid;
+func process_points(points: Array[Vector2]) -> Array[float]:
+	processed_points.clear();
+	points = resample(points, SAMPLE_SIZE);
+	var vector := vectorize(points);
+	for i in range(0,vector.size(),2):
+		processed_points.append(Vector2(vector[i], vector[i+1]));
+	return vector;
 
-func rotate_by(point_list: Array[Vector2], angle: float) -> Array:
-	var center = calculate_centroid(point_list);
-	var new_points := [];
-	
-	for point in point_list:
-		new_points.append((point - center).rotated(angle) + center);
-		
-	return new_points;
-
-#Scale all the points in the list to the given size
-func scale_to(point_list: Array[Vector2], size: int) -> void:
-	
-	var min_p = Vector2.INF;
-	var max_p = -Vector2.INF;
-	
-	for p in point_list:
-		min_p.x = min(min_p.x,p.x);
-		min_p.y = min(min_p.y,p.y);
-		max_p.x = max(max_p.x,p.x);
-		max_p.y = max(max_p.y,p.y);
-		
-	var width = max_p.x - min_p.x;
-	var height = max_p.y - min_p.y;
-	
-	if width == 0: width = 1
-	if height == 0: height = 1
-	
-	for i in range(point_list.size()):
-		point_list[i].x *= (size / width)
-		point_list[i].y *= (size / height)
-	
-func translate_to(point_list: Array[Vector2], target: Vector2)->void:
-	var current_centroid = calculate_centroid(point_list);
-	
-	for i in range(point_list.size()):
-		point_list[i] = point_list[i] - current_centroid + target
-		
-func recognize(point_list: Array[Vector2]) -> Dictionary:
-	var proc_points = process_points(point_list);
-	var max_score = 0;
-	var best_template = "unknown";
-	
-	print("COMPARISION TABLE");
-	for template in templates:
-		print("================");
-		var distance = cosine_distance(proc_points,vectorize(templates[template]));
-		var score = 1.0/distance;
-		print(template,  " : ", (score) );
-		print("================");
-		if (score > max_score):
-			max_score = score;
-			best_template = template;
-	
-	if max_score < 0.1:
-		return {"name": "unknown", "score": max_score};
-	
+func recognize(vector: Array[float]) -> Dictionary:
+	var max_score := 0.0;
+	var best_template := "unknown";
+	for key in templates:
+		var vector_template = get_vectorized_template(key);
+		var distance := optimal_cos_distance(vector_template, vector);
+		var score = 1/distance;
+		if score > max_score:
+			max_score = score
+			best_template = key;
 	
 	return {"name": best_template, "score": max_score};
 	
-	
-func cosine_distance(points1: Array[float], points2: Array[float]) -> float:
-	var a := 0.0;
-	var b := 0.0;
-	for i in range(0, points1.size(), 2):
-		a += points1[i] * points2[i] + points1[i + 1] * points2[i+1];
-		b += points1[i] * points2[i+1] - points1[i + 1] * points2[i];
+func optimal_cos_distance(vec1: Array[float], vec2: Array[float]) -> float:
+	var a := 0.0; var b := 0.0;
+	for i in range(0, vec1.size(), 2):
+		a += vec1[i] * vec2[i] + vec1[i+1] * vec2[i+1];
+		b += vec1[i] * vec2[i + 1] - vec1[i+1] * vec2[i];
 	var angle = atan2(b,a);
-	var cos_sim = a * cos(angle) + b * sin(angle);
-	return cos_sim;
+	var val = a * cos(angle) + b * sin(angle);
+	val = clamp(val, -1.0, 1.0);
+	return acos(val);
+
+func resample(points: Array[Vector2], sample: float) -> Array[Vector2]:
+	var interval := path_length(points) / (sample - 1);
+	var distance := 0.0;
 	
-func vectorize(point_list: Array[Vector2]) -> Array[float]:
-	var sum := 0.0;
+	var new_points : Array[Vector2] = [points[0]];
+	
+	var i := 1;
+	while i < points.size():
+		var d := points[i-1].distance_to(points[i]);
+		if (distance + d >= interval):
+			var t := (interval - distance) / d;
+			var q := points[i-1] + t * (points[i] - points[i-1]);
+			new_points.append(q);
+			points.insert(i, q); 
+			distance = 0.0;
+		else:
+			distance += d;
+		i += 1;
+	if new_points.size() == sample - 1:
+		new_points.append(points.back())
+	return new_points;
+	
+	
+func path_length(points: Array[Vector2]) -> float:
+	var distance := 0.0;
+	for i in range(1, points.size()):
+		distance += points[i-1].distance_to(points[i]);
+	return distance
+
+func vectorize(points: Array[Vector2], orientation_sensitive: bool = false) -> Array[float]:
 	var vector : Array[float] = [];
-
-	for point in point_list:
-		vector.append(point.x);
-		vector.append(point.y);
-		sum+= point.x * point.x + point.y * point.y;
-	var magnitude = sqrt(sum);
-	
+	var centroid := calculate_centroid(points);
+	points = translate_to(points, Vector2.ZERO);
+	var indicative_angle = atan2(points[0].y, points[0].x);
+	var delta := 0.0;
+	if orientation_sensitive:
+		var base = (PI/4) * floor(indicative_angle + (PI/8))/(PI/4)
+		delta = base - indicative_angle;
+	else:
+		delta = -indicative_angle;
+	var sum := 0;
+	for p in points:
+		var rot_p = p.rotated(delta);
+		vector.append(rot_p.x);
+		vector.append(rot_p.y);
+		sum+=rot_p.x * rot_p.x + rot_p.y * rot_p.y;
+	var maginitude = sqrt(sum);
 	for i in range(vector.size()):
-		vector[i] /= magnitude;
-		
+		vector[i]/= maginitude;
 	return vector;
-
-func point_distance(points1: Array, points2: Array) -> float:
-	var distance = 0.0
 	
-	for i in range(points1.size()):
-		distance += points1[i].distance_to(points2[i])
+func calculate_centroid(points: Array[Vector2]) -> Vector2:
+	var centroid := Vector2.ZERO;
+	for point in points:
+		centroid += point;
+	return centroid / points.size();
 	
-	return distance / points1.size()
-	
-func calculate_centroid(point_list : Array[Vector2]) -> Vector2:
-	var center = Vector2.ZERO;
-	for point in point_list:
-		center+=point;
-	return center/point_list.size();
+func translate_to(points: Array[Vector2], to: Vector2) -> Array[Vector2]:
+	var c := calculate_centroid(points);
+	var new_points : Array[Vector2];
+	for p in points:
+		var q := p + to - c;
+		new_points.append(q);
+	return new_points;
+		

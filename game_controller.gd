@@ -18,15 +18,16 @@ func _process(delta: float) -> void:
 	return;
 	
 func process_spell() -> void:
-	print(recog.recognize(spell_control.spell_line.points));
-
+	
+	var vector := recog.process_points(spell_control.spell_line.points);
+	print(recog.recognize(vector));
 
 	#print("NEW DRAWING");
-	for p in recog.points:
+	#for p in recog.points:
 		#print(p);
-		spell_control.debug_line.add_point(p);
-	debug_centroid.position = recog.centroid;
-	debug_centroid.visible = true;
+	#	spell_control.debug_line.add_point(p);
+	#debug_centroid.position = recog.centroid;
+	#debug_centroid.visible = true;
 
 
 	return;

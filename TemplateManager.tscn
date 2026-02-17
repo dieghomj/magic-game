@@ -1,4 +1,4 @@
-[gd_scene format=3 uid="uid://7hhwsndfcfed"]
+[gd_scene format=3 uid="uid://c042t578j2lmc"]
 
 [ext_resource type="Script" uid="uid://dmbad5khtxxw5" path="res://template_manager.gd" id="1_0f4gu"]
 [ext_resource type="PackedScene" uid="uid://dw80nhwul1fdd" path="res://Scenes/SpellTest.tscn" id="1_g17sb"]
