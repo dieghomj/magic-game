@@ -1,14 +1,14 @@
 class_name UnistrokeRecognizer
-extends Node
+extends Resource
 
-const SAMPLE_SIZE := 64;
-const BOUND_BOX_SIZE := 250;
+@export var SAMPLE_SIZE := 64;
+@export var BOUND_BOX_SIZE := 250;
 
 var templates: Dictionary[String, Array];
 var processed_points : Array[Vector2];
 
 func add_template(key: String, points: Array[Vector2]) -> void:
-	templates.set(key, points);
+	templates.set(key, points.duplicate());
 	
 func save_template(filename: String) -> bool:
 	if FileAccess.file_exists(filename):
@@ -87,11 +87,12 @@ func recognize(vector: Array[float]) -> Dictionary:
 	for key in templates:
 		var vector_template = get_vectorized_template(key);
 		var distance := optimal_cos_distance(vector_template, vector);
-		var score = 1/distance;
+		var score = 1 - distance;
 		if score > max_score:
 			max_score = score
 			best_template = key;
-	
+	if max_score < 0.7 :
+		return {"name": "unknown", "score": 0.0};
 	return {"name": best_template, "score": max_score};
 	
 func optimal_cos_distance(vec1: Array[float], vec2: Array[float]) -> float:

@@ -1,5 +1,5 @@
-class_name SpellController
-extends ColorRect
+class_name SpellCanvas
+extends Panel
 
 #Child Objects
 @onready var spell_particles:GPUParticles2D = $SpellParticles ;
@@ -25,15 +25,18 @@ func _input(event: InputEvent) -> void:
 			mouse_pressed = false;
 			one_time_flag = false;
 			for point in mouse_pos_list:
-				spell_line.add_point(point);
+				pass
 	if event is InputEventMouseMotion and mouse_pressed:
 		move_particles(event.position);
-		mouse_pos_list.append( event.position );
+		spell_line.add_point(event.global_position);
+		#mouse_pos_list.append( event.position );
 		
 	
 @warning_ignore("unused_parameter")
 func _process(delta: float) -> void:
-	if spell_line.points.size() > 0 and !one_time_flag:
+	if !visible :
+		drawing_enable_flag = false;
+	if spell_line.points.size() > 0 and !mouse_pressed and !one_time_flag:
 		is_activate = true;
 		one_time_flag = true;
 	else:

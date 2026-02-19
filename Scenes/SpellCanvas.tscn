@@ -1,27 +1,34 @@
 [gd_scene format=3 uid="uid://dw80nhwul1fdd"]
 
-[ext_resource type="Script" uid="uid://c1dyt5ujedyhd" path="res://Scripts/spell_controller.gd" id="1_ynu1k"]
+[ext_resource type="Script" uid="uid://c1dyt5ujedyhd" path="res://Scripts/spell_canvas.gd" id="1_ynu1k"]
 [ext_resource type="Texture2D" uid="uid://b5jjcfyb1cqbm" path="res://Textures/divine.png" id="2_qnw8k"]
 [ext_resource type="Material" uid="uid://c86jilt77l5x3" path="res://Resources/SpellParticleMat.tres" id="3_qnw8k"]
 [ext_resource type="Texture2D" uid="uid://dj7pfqi42le85" path="res://Textures/fire.jpg" id="4_7naq7"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_lxg6r"]
+bg_color = Color(0.3137255, 0.7058824, 0, 0)
+border_width_left = 50
+border_width_top = 50
+border_width_right = 50
+border_width_bottom = 50
+border_color = Color(0.3976988, 0.94329166, 0, 1)
+border_blend = true
 
 [sub_resource type="Gradient" id="Gradient_7naq7"]
 offsets = PackedFloat32Array(0.0009823183, 0.5805501, 1)
 colors = PackedColorArray(0, 0.76862746, 0, 1, 0, 0, 0, 0.627451, 1, 0.19215687, 0.16470589, 1)
 
-[node name="SpellCanvas" type="ColorRect" unique_id=1197744887]
+[node name="SpellCanvas" type="Panel" unique_id=1893641121]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-color = Color(0.4117647, 0.69803923, 1, 0.30980393)
+theme_override_styles/panel = SubResource("StyleBoxFlat_lxg6r")
 script = ExtResource("1_ynu1k")
-metadata/_edit_use_anchors_ = true
 
 [node name="SpellParticles" type="GPUParticles2D" parent="." unique_id=812489700]
+top_level = true
 amount = 320
 texture = ExtResource("2_qnw8k")
 fixed_fps = 60

@@ -13,11 +13,17 @@ enum State {
 
 @onready var anim_player: AnimationPlayer = $skeleton_mage/AnimationPlayer;
 
+@export var speed: float = 5.0;
+@export var rotation_speed: float = PI/50;
+@export var jump_power: float = 1.2;
+
+var current_spell: Spell = null;
 var player_state: State = State.IDLE;
 var forward: Vector3 = Vector3(0, 0, 1);
 var jumped: bool = false; 
 
 func _ready() -> void:
+	current_spell = BlinkSpell.new();
 	return;
 
 func _process(delta: float) -> void:
@@ -28,7 +34,8 @@ func _process(delta: float) -> void:
 		 player_state == State.JUMP_IDLE or\
 	 	 player_state == State.JUMP_LAND or\
 		 player_state == State.JUMP_LANDING:
-		anim_player.play("Jump_Full_Short");
+		#anim_player.play("Jump_Full_Short");
+		pass
 	else:
 		anim_player.play("Idle_B");
 	
@@ -40,9 +47,9 @@ func _physics_process(delta: float) -> void:
 	
 	var moveDir = forward * inputValue.x;
 	var jumpDir = Vector3.UP;
-	var rotDelta = PI/50 * inputValue.y;
-	const velValue = 5.0;
-	const jumpPower = 1.2;
+	var rotDelta = rotation_speed * inputValue.y;
+	var velValue = speed;
+	var jumpPower = jump_power;
 	
 	rotate(Vector3.UP,rotDelta);
 	forward = forward.rotated(Vector3.UP,rotDelta);
@@ -80,6 +87,8 @@ func get_input() -> Vector2:
 func _unhandled_key_input(event: InputEvent) -> void:
 	
 	if event.is_action_pressed("jump") and is_on_floor():
+		anim_player.play("Jump_Start");
+		anim_player.speed_scale = 1.5;
 		player_state = State.JUMP_START;
 
 	return;
